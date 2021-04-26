@@ -5,8 +5,7 @@
 
 // create an instance of the stepper class, specifying
 // the number of steps of the motor and the pins it's
-// attached to blah blah JJJJJJJJJJJJJJJ
-Stepper stepper(STEPS,5,6,7,8);
+Stepper stepper(STEPS,2,3,4,5);
 int buttonPin = 26;
 int buttonRead = 0;
 int pitch = 10; //threads per inch
@@ -21,7 +20,7 @@ void setup()
   Serial.begin(9600);
   Serial.println("Stepper test!");
   // set the speed of the motor to 30 RPMs
-  stepper.setSpeed(80);
+  stepper.setSpeed(90);
   //setup button pin as input
   pinMode(buttonPin,INPUT);
   
@@ -30,7 +29,8 @@ void setup()
 
 void loop()
 {
-  buttonRead = digitalRead(buttonPin);
+  buttonRead = 1;
+  //buttonRead = digitalRead(buttonPin);
   //Serial.println(buttonRead);
   
   while(buttonRead==1){
@@ -46,11 +46,28 @@ void loop()
       int depth = Serial.parseInt();
       plungeSteps = pitch*depth*ratio*STEPS;
       Serial.println(depth);
-      while(stepCount < plungeSteps && depth >0){
+      if (depth>0){
+        Serial.println("here!");
+        while(stepCount < plungeSteps && depth >0){
         Serial.println(stepCount);
         stepCount = stepCount+200;
         stepper.step(STEPS);
-        stepsLeft = plungeSteps - stepCount;  
+        stepsLeft = plungeSteps - stepCount;   
+        }
+        stepper.step(-STEPS*2); //retract plunger to release batter pressure
+      }
+      else{ 
+        Serial.println("going Up!");
+        stepsLeft = plungeSteps;
+        while(stepCount > plungeSteps && depth <0){
+          Serial.println("Steps to plunge ");
+          Serial.print(stepsLeft);
+          Serial.println("Total Steps ");
+          Serial.print(plungeSteps);
+          stepCount = stepCount-200;
+          stepper.step(-STEPS);
+          stepsLeft = plungeSteps + stepCount; 
+        }
       }
       plunges++;
       stepCount = 0;
