@@ -1,5 +1,5 @@
 #include <Stepper.h>
-
+  
 // change this to the number of steps on your motor
 #define STEPS 200
 
@@ -14,13 +14,12 @@ int plungeSteps = 0;
 int stepCount = 0;
 int stepsLeft = 0;
 int plunges = 0; //how many times the plunge operation has been called
-
 void setup()
 {
   Serial.begin(9600);
   Serial.println("Stepper test!");
   // set the speed of the motor to 30 RPMs
-  stepper.setSpeed(90);
+  stepper.setSpeed(35);
   //setup button pin as input
   pinMode(buttonPin,INPUT);
   
@@ -38,8 +37,8 @@ void loop()
      Serial.println("Input plunge depth (in)"); 
     }
     else{
-      Serial.println("Current # of plunges ");
-      Serial.print(plunges);
+      Serial.print("Current # of plunges ");
+      Serial.println(plunges);
       Serial.println("Input plunge depth (in)"); 
     }
     while(Serial.available()==0){}
@@ -52,7 +51,7 @@ void loop()
         Serial.println(stepCount);
         stepCount = stepCount+200;
         stepper.step(STEPS);
-        stepsLeft = plungeSteps - stepCount;   
+        stepsLeft = plungeSteps - stepCount;
         }
         stepper.step(-STEPS*2); //retract plunger to release batter pressure
       }
@@ -60,10 +59,10 @@ void loop()
         Serial.println("going Up!");
         stepsLeft = plungeSteps;
         while(stepCount > plungeSteps && depth <0){
-          Serial.println("Steps to plunge ");
-          Serial.print(stepsLeft);
-          Serial.println("Total Steps ");
-          Serial.print(plungeSteps);
+          //Serial.println("Steps to plunge ");
+          //Serial.print(stepsLeft);
+          //Serial.println("Total Steps ");
+          //Serial.print(plungeSteps);
           stepCount = stepCount-200;
           stepper.step(-STEPS);
           stepsLeft = plungeSteps + stepCount; 
@@ -71,8 +70,12 @@ void loop()
       }
       plunges++;
       stepCount = 0;
+      digitalWrite(2,LOW);
+      digitalWrite(3,LOW);
+      digitalWrite(4,LOW);
+      digitalWrite(5,LOW);
   }
-  Serial.println('Goodbye');
+  Serial.println("Goodbye");
 }
   
    
