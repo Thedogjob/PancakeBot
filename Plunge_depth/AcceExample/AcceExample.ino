@@ -27,14 +27,14 @@ void loop() {
       Serial.println("We're going down down, in an earlier around!");
       //stepper.runSpeed();
       // Set the target position:
-      stepper.moveTo(-80000);
+      stepper.moveTo(80000);
       // Run to target position with set speed and acceleration/deceleration:
       stepper.runToPosition();
       delay(1000);
     if (Dir ==3); //go Up
       Serial.println("Im burning Up!");
       // Move back to zero:
-      stepper.moveTo(80000);
+      stepper.moveTo(-80000);
       stepper.runToPosition();
       delay(1000);
   }
